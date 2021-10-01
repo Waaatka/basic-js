@@ -11,7 +11,11 @@ import { NotImplementedError } from '../extensions/index.js';
  *  'code.yandex.ru',
  *  'music.yandex.ru',
  *  'yandex.ru'
- * ]
+ * ] => [
+ *  ['.ru', '.ru.yandex', '.ru.yandex.code']
+ *  ['.ru', '.ru.yandex', '.ru.yandex.music']
+ *  ['.ru', '.ru.yandex']
+ * ] => ['.ru', '.ru.yandex', '.ru.yandex.code', '.ru', '.ru.yandex', '.ru.yandex.music', '.ru', '.ru.yandex' ]
  *
  * The result should be the following:
  * {
@@ -22,7 +26,18 @@ import { NotImplementedError } from '../extensions/index.js';
  * }
  *
  */
-export default function getDNSStats(/* domains */) {
-  throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
+export default function getDNSStats(domains) {
+  return domains
+      .map(domain => {
+        return domain.split('.').reverse().map((part, i, arr) => `.${[...arr.slice(0, i), part].join('.')}`)
+      })
+      .reduce((res, el) => [...res, ...el], [])
+      .reduce((res, el) => {
+        if (typeof res[el] === 'undefined') {
+          res[el] = 1
+        } else {
+          res[el]++
+        }
+        return res
+      }, {})
 }

@@ -23,7 +23,21 @@ import { NotImplementedError } from '../extensions/index.js';
  *  [1, 1, 1]
  * ]
  */
-export default function minesweeper (/* matrix */) {
-  throw new NotImplementedError('Not implemented');
-  // remove line with error and write your code here
+export default function minesweeper (matrix) {
+  const checkCell = (row, column) => {
+    if (typeof matrix[row] !== 'undefined') {
+      return Number(matrix[row][column] || false)
+    }
+    return 0
+  }
+  return matrix.map((row, rowIdx) => row.map((cell, colIdx) => {
+    return checkCell(rowIdx - 1, colIdx - 1)
+        + checkCell(rowIdx - 1, colIdx)
+        + checkCell(rowIdx - 1, colIdx + 1)
+        + checkCell(rowIdx, colIdx - 1)
+        + checkCell(rowIdx, colIdx + 1)
+        + checkCell(rowIdx + 1, colIdx - 1)
+        + checkCell(rowIdx + 1, colIdx)
+        + checkCell(rowIdx + 1, colIdx + 1)
+  }))
 }
